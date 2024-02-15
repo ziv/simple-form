@@ -99,26 +99,27 @@ export interface FieldsetInput {
   defaultValue?: { [key: string]: unknown };
 }
 
+export const FieldsMap: Record<FieldsetTypes, unknown> = {
+  [FieldsetTypes.Checkbox]: true,
+  [FieldsetTypes.Range]: 0,
+  [FieldsetTypes.Number]: 0,
+  [FieldsetTypes.Text]: '',
+  [FieldsetTypes.Email]: '',
+  [FieldsetTypes.Date]: {},
+  [FieldsetTypes.Time]: {},
+  [FieldsetTypes.Select]: '',
+  [FieldsetTypes.Color]: '#000000',
+  // specials
+  [FieldsetTypes.Font]: {},
+  [FieldsetTypes.Icons]: [],
+};
+
 export function fieldset(input: FieldsetInput): FormGroup {
   const fb = new FormBuilder();
-  const map: Record<FieldsetTypes, unknown> = {
-    [FieldsetTypes.Checkbox]: true,
-    [FieldsetTypes.Range]: 0,
-    [FieldsetTypes.Number]: 0,
-    [FieldsetTypes.Text]: '',
-    [FieldsetTypes.Email]: '',
-    [FieldsetTypes.Date]: {},
-    [FieldsetTypes.Time]: {},
-    [FieldsetTypes.Select]: '',
-    [FieldsetTypes.Color]: '#000000',
-    // specials
-    [FieldsetTypes.Font]: {},
-    [FieldsetTypes.Icons]: [],
-  };
   const sub: Record<string, unknown> = {};
   for (const section of input.sections) {
     for (const item of section.items) {
-      sub[item.control] = [map[item.type]];
+      sub[item.control] = [FieldsMap[item.type]];
     }
   }
   const form = fb.group(sub);
