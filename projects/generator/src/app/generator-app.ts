@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { JsonPipe } from '@angular/common';
-import { FieldsetTypes } from '../../../xpr/simple-form/src/lib/simple-form';
+import { type FieldsetInput, FieldsetSection, FieldsetTypes } from '../../../xpr/simple-form/src/lib/simple-form';
 
 const ItemMap: Record<string, any> = {
   [FieldsetTypes.Number]: {
@@ -48,9 +48,14 @@ const ItemMap: Record<string, any> = {
 
       label, .label {
         display: flex;
-        gap: .7em;
+        gap: 1em;
         justify-content: space-between;
         align-items: center;
+
+        var {
+          font-size: 1.5em;
+          cursor: pointer;
+        }
 
         span {
           width: 8em;
@@ -70,11 +75,12 @@ const ItemMap: Record<string, any> = {
     <h1>SIMPLE FORM GENERATOR</h1>
     <div class="wrap">
       <main>
-        @for (group of itr(form, 'groups'); track group.value.group) {
+        @for (group of itr(groups); track group.value.group; let iG = $index) {
           <section [formGroup]="group" class="group">
             <label>
               <span>legend</span>
               <input type="text" formControlName="legend">
+              <button (click)="removeAt(this.groups, iG)">⌫</button>
             </label>
             <label>
               <span>group</span>
@@ -83,20 +89,22 @@ const ItemMap: Record<string, any> = {
             <div class="label">
               <span>sections</span>
               <div>
-                @for (section of itr(group, 'sections'); track section) {
+                @for (section of itr(group, 'sections'); track section; let iS = $index) {
                   <section [formGroup]="section" class="section">
                     <label>
                       <span>label</span>
                       <input type="text" formControlName="label"> (optional)
+                      <button (click)="removeAt(toArr(group, 'sections'), iS)">⌫</button>
                     </label>
                     <div class="label">
                       <span>items</span>
                       <div>
-                        @for (item of itr(section, 'items'); track item) {
+                        @for (item of itr(section, 'items'); track item; let iI = $index) {
                           <section class="item" [formGroup]="item">
                             <label>
                               <span>type</span>
                               <span>{{ item.value.type }}</span>
+                              <button (click)="removeAt(toArr(section, 'items'), iI)">⌫</button>
                             </label>
                             <label>
                               <span>label</span>
@@ -147,7 +155,7 @@ const ItemMap: Record<string, any> = {
         <button (click)="addGroup()">ADD GROUP</button>
       </main>
       <aside>
-        <pre>{{ form.value.groups | json }}</pre>
+        <pre>{{ groups.value | json }}</pre>
       </aside>
     </div>
   `,
@@ -155,11 +163,20 @@ const ItemMap: Record<string, any> = {
 export class GeneratorApp {
   fb = new FormBuilder();
   // @ts-ignore
-  form = this.fb.group({groups: this.fb.array([])});
+  groups: FormArray<FormGroup> = this.fb.array([]);
   types = Object.values(FieldsetTypes);
 
-  get groups() {
-    return this.form.get('groups') as FormArray;
+  // remove(form: FormGroup | FormArray, idx: number, key?: string) {
+  //   console.log('key=', key, ((key ? form.get(key) : form) as FormArray));
+  //   ((key ? form.get(key) : form) as FormArray).removeAt(idx);
+  // }
+
+  toArr(form: FormGroup, key: string) {
+    return form.get(key) as FormArray;
+  }
+
+  removeAt(form: FormArray, idx: number) {
+    form.removeAt(idx);
   }
 
   addGroup() {
@@ -186,8 +203,8 @@ export class GeneratorApp {
     }));
   }
 
-  * itr(form: FormGroup, key: string): Generator<FormGroup> {
-    const f = form.get(key) as FormArray;
+  * itr(form: FormGroup | FormArray, key?: string): Generator<FormGroup> {
+    const f = key ? form.get(key) as FormArray : form as FormArray;
     for (let i = 0; i < f.length; ++i) {
       yield f.controls[i] as FormGroup;
     }
