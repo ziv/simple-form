@@ -18,15 +18,6 @@ const ItemMap: Record<string, any> = {
   }
 }
 
-function itemFactory(type: FieldsetTypes | string) {
-  return {
-    type: [type],
-    label: ['', Validators.required],
-    control: ['', Validators.required],
-    ...(ItemMap[type as FieldsetTypes] ?? {})
-  };
-}
-
 @Component({
   selector: 'xpr-root',
   standalone: true,
@@ -51,8 +42,8 @@ function itemFactory(type: FieldsetTypes | string) {
       }
 
       section {
-        border: 1px solid #dadada;
-        border-radius: .2em;
+        //border: 1px solid #dadada;
+        //border-radius: .2em;
       }
 
       label, .label {
@@ -79,10 +70,10 @@ function itemFactory(type: FieldsetTypes | string) {
     <h1>SIMPLE FORM GENERATOR</h1>
     <div class="wrap">
       <main>
-        @for (group of itr(groups, 'groups'); track group.value.group) {
+        @for (group of itr(form, 'groups'); track group.value.group) {
           <section [formGroup]="group" class="group">
             <label>
-              <span>Legend</span>
+              <span>legend</span>
               <input type="text" formControlName="legend">
             </label>
             <label>
@@ -95,7 +86,7 @@ function itemFactory(type: FieldsetTypes | string) {
                 @for (section of itr(group, 'sections'); track section) {
                   <section [formGroup]="section" class="section">
                     <label>
-                      <span>Label</span>
+                      <span>label</span>
                       <input type="text" formControlName="label"> (optional)
                     </label>
                     <div class="label">
@@ -156,22 +147,22 @@ function itemFactory(type: FieldsetTypes | string) {
         <button (click)="addGroup()">ADD GROUP</button>
       </main>
       <aside>
-        <pre>{{ groups.value.groups | json }}</pre>
+        <pre>{{ form.value.groups | json }}</pre>
       </aside>
     </div>
   `,
 })
-export class AppComponent {
+export class GeneratorApp {
   fb = new FormBuilder();
-  groups = this.fb.group({groups: this.fb.array([])});
+  form = this.fb.group({groups: this.fb.array([])});
   types = Object.values(FieldsetTypes);
 
-  get list() {
-    return this.groups.get('groups') as FormArray;
+  get groups() {
+    return this.form.get('groups') as FormArray;
   }
 
   addGroup() {
-    this.list.push(this.fb.group({
+    this.groups.push(this.fb.group({
       legend: [''],
       group: [''],
       sections: this.fb.array([]),
@@ -179,11 +170,19 @@ export class AppComponent {
   }
 
   addSection(group: FormGroup) {
-    (group.get('sections') as FormArray).push(this.fb.group({label: [''], items: this.fb.array([])}));
+    (group.get('sections') as FormArray).push(this.fb.group({
+      label: [''],
+      items: this.fb.array([])
+    }));
   }
 
   addItem(group: FormGroup, type: string) {
-    (group.get('items') as FormArray).push(this.fb.group(itemFactory(type)));
+    (group.get('items') as FormArray).push(this.fb.group({
+      type: [type],
+      label: ['', Validators.required],
+      control: ['', Validators.required],
+      ...(ItemMap[type as FieldsetTypes] ?? {})
+    }));
   }
 
   * itr(form: FormGroup, key: string): Generator<FormGroup> {
