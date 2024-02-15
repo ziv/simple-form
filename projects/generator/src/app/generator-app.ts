@@ -154,6 +154,7 @@ const ItemMap: Record<string, any> = {
 })
 export class GeneratorApp {
   fb = new FormBuilder();
+  // @ts-ignore
   form = this.fb.group({groups: this.fb.array([])});
   types = Object.values(FieldsetTypes);
 
