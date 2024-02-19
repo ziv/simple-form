@@ -1,73 +1,55 @@
 import { AfterViewInit, Component, EventEmitter, Input, OnDestroy, Output } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { NgClass } from '@angular/common';
-import { fieldset, FieldsetInput, FieldsetItem, FieldsetTypes } from './simple-form';
 import { Subscription } from 'rxjs';
+import { fieldset, FieldsetInput, FieldsetItemU, FieldsetSection, FieldsetTypes } from './simple-form';
 
 @Component({
   selector: 'xpr-fieldset',
   standalone: true,
   imports: [ReactiveFormsModule, NgClass],
   template: `
-    @if (form && descriptor) {
-      <fieldset [formGroup]="form">
-        <legend (click)="expand=!expand;notify()">
+    @if (form && desc) {
+      <fieldset [formGroup]="form" class="xpr">
+        <legend (click)="toggle()" class="xpr">
           <span>{{ icon() }}</span>
-          {{ descriptor.legend }}
+          {{ desc.legend }}
         </legend>
         @if (expand) {
-          @for (section of descriptor.sections; track section.label) {
-            @if (section.label) {
-              <h3>{{ section.label }}</h3>
+          @for (outer of desc.items; track $index) {
+            @if (outer.legend) {
+              <h3 class="xpr">{{ outer.legend }}</h3>
             }
-            <section>
-              @for (item of section.items; track item.control) {
-                @if (displayItem(item)) {
-                  <label [ngClass]="'type-'+item.type">
-                    @switch (item.type) {
-                      @case (types.Checkbox) {
-                        <span></span>
-                        <var><input type="checkbox" [formControlName]="item.control"></var>
-                        <span>{{ item.label }}</span>
-                      }
-                      @case (types.Range) {
-                        <span>{{ item.label }}</span>
-                        <input type="range" [formControlName]="item.control"
-                               [max]="item.max" [min]="item.min" [step]="item.step ?? 1">
-                      }
-                      @case (types.Number) {
-                        <span>{{ item.label }}</span>
-                        <input type="number" [formControlName]="item.control"
-                               [max]="item.max ?? null" [min]="item.min ?? null">
-                      }
-                      @case (types.Color) {
-                        <span></span>
-                        <var><input type="color" [formControlName]="item.control"></var>
-                        <span>{{ item.label }}</span>
-                      }
-                      @case (types.Text) {
-                        <span>{{ item.label }}</span>
-                        <input type="text" [formControlName]="item.control">
-                      }
-                      @case (types.Email) {
-                        <span>{{ item.label }}</span>
-                        <input type="email" [formControlName]="item.control">
-                      }
-                      @case (types.Date) {
-                        <span>{{ item.label }}</span>
-                        <input type="date" [formControlName]="item.control">
-                      }
-                      @case (types.Select) {
-                        <span>{{ item.label }}</span>
-                        <select [formControlName]="item.control">
-                          @for (el of item.options; track el.label) {
-                            <option [ngValue]="el.value">{{ el.label }}</option>
-                          }
-                        </select>
-                      }
+            <section class="xpr">
+              @for (item of itr(outer); track $index) {
+                <label [ngClass]="'xpr type-'+item.type">
+                  <span>{{ item.label }}</span>
+                  @switch (item.type) {
+                    @case (types.Checkbox) {
+                      <!-- todo checkbox does not working when bound -->
+                      <input type="checkbox"
+                             [formControlName]="item.control">
                     }
-                  </label>
-                }
+                    @case (types.Range) {
+                      <input type="range"
+                             [formControlName]="item.control"
+                             [min]="item.min"
+                             [max]="item.max"
+                             [step]="item.step">
+                    }
+                    @case (types.Select) {
+                      <select [formControlName]="item.control">
+                        @for (el of item.options; track el.label) {
+                          <option [ngValue]="el.value">{{ el.label }}</option>
+                        }
+                      </select>
+                    }
+                    @default {
+                      <input [type]="item.control"
+                             [formControlName]="item.control">
+                    }
+                  }
+                </label>
               }
             </section>
           }
@@ -77,16 +59,18 @@ import { Subscription } from 'rxjs';
   `
 })
 export class XprFieldset implements OnDestroy, AfterViewInit {
-  protected types = FieldsetTypes;
+  protected readonly types = FieldsetTypes;
   protected expand = false;
   protected sub?: Subscription;
-  protected descriptor?: FieldsetInput;
+  protected desc?: FieldsetInput;
   protected form?: FormGroup;
 
-  @Input() set desc(desc: FieldsetInput) {
-    if (!desc) return;
-    this.form = fieldset(desc);
-    this.descriptor = desc;
+  @Input() collapsable = true;
+
+  @Input() set descriptor(input: FieldsetInput) {
+    if (!input) return;
+    this.form = fieldset(input);
+    this.desc = input;
     this.sub?.unsubscribe();
     this.sub = this.form.valueChanges.subscribe(value => this.changed.emit(value));
   }
@@ -95,11 +79,11 @@ export class XprFieldset implements OnDestroy, AfterViewInit {
   @Output() changed = new EventEmitter();
 
   close() {
-    this.expand = false;
+    if (this.collapsable) this.expand = false;
   }
 
   open() {
-    this.expand = true;
+    if (this.collapsable) this.expand = true;
   }
 
   ngOnDestroy() {
@@ -111,15 +95,20 @@ export class XprFieldset implements OnDestroy, AfterViewInit {
     this.form && Promise.resolve().then(() => this.changed.emit(this.form?.value));
   }
 
+  * itr(section: FieldsetSection): Generator<FieldsetItemU> {
+    for (const item of section.items)
+      if (item.condition ? item.condition(this.form?.value) : true)
+        yield item as FieldsetItemU;
+
+  }
+
   protected icon() {
     return this.expand ? '▼' : '▶';
   }
 
-  protected notify() {
+  protected toggle() {
+    if (!this.collapsable) return;
+    this.expand = !this.expand;
     if (this.expand) this.opened.emit(this);
-  }
-
-  protected displayItem(item: FieldsetItem) {
-    return item.condition ? item.condition(this.form?.value) : true;
   }
 }

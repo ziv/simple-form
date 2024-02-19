@@ -1,23 +1,18 @@
-#!/usr/bin/env -S ts-node
-
-const next = (v: any): string => {
-  switch (true) {
-    case Array.isArray(v):
-      return `[${v.map(next).join(',')}]`;
-    case typeof v === 'boolean':
-      return v ? 'true' : 'false';
-    case typeof v === 'number':
-      return `${v}`;
-    case typeof v === 'string':
-      return `'${v}'`
-    case typeof v === 'object':
-      return `\{${Object.entries(v).map(([key, value]) => `${key}:${next(value)}`).join(',')}\}`;
+export function toCode(inputs: unknown) {
+  const next = (v: unknown): string => {
+    switch (true) {
+      case Array.isArray(v):
+        return `[${(v as unknown[]).map(next).join(',')}]`;
+      case typeof v === 'boolean':
+        return v ? 'true' : 'false';
+      case typeof v === 'number':
+        return `${v}`;
+      case typeof v === 'string':
+        return `'${(v as string).replace("'", "\\'")}'`
+      case typeof v === 'object':
+        return `\{${Object.entries(v as object).map(([key, value]) => `${key}:${next(value)}`).join(',')}\}`;
+    }
+    throw new Error(`[InferError] unable to infer type of ${v}`);
   }
-  console.error('InferError', v);
-  throw new Error('unable to infer type');
-}
-
-
-function toCode(inputs: any) {
   return next(inputs);
 }

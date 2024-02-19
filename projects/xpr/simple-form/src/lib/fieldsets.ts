@@ -8,18 +8,18 @@ import {
   QueryList,
   ViewChildren
 } from '@angular/core';
-import { FieldsetInput } from './simple-form';
-import { XprFieldset } from './fieldset';
 import { merge, Subscription } from 'rxjs';
+import { XprFieldset } from './fieldset';
+import type { FieldsetInput } from './simple-form';
 
 @Component({
   selector: 'xpr-fieldsets',
   standalone: true,
   imports: [XprFieldset],
   template: `
-    @for (desc of descriptors; track desc.group) {
-      <xpr-fieldset [desc]="desc" (changed)="update(desc.group, $event)"></xpr-fieldset>
-    }
+        @for (desc of desc; track $index) {
+          <xpr-fieldset [descriptor]="desc[1]" (changed)="update(desc[0], $event)"></xpr-fieldset>
+        }
   `
 })
 export class XprFieldsets implements AfterViewInit, OnDestroy {
@@ -27,8 +27,8 @@ export class XprFieldsets implements AfterViewInit, OnDestroy {
   protected data: { [key: string]: unknown } = {};
   @ViewChildren(XprFieldset) protected fieldSets!: QueryList<XprFieldset>;
 
-  @Input() descriptors: FieldsetInput[] = [];
   @Input() autoClose = true;
+  @Input() descriptors?: Record<string, FieldsetInput>;
   @Output() changed = new EventEmitter();
 
   update(group: string, data: unknown,) {
@@ -46,5 +46,9 @@ export class XprFieldsets implements AfterViewInit, OnDestroy {
 
   ngOnDestroy() {
     this.sub?.unsubscribe();
+  }
+
+  protected get desc() {
+    return this.descriptors ? Object.entries(this.descriptors) : [];
   }
 }

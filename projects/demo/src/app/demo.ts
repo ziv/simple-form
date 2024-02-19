@@ -1,31 +1,27 @@
 import { Component } from '@angular/core';
-import { XprFieldset } from '@xpr/simple-form';
 import { JsonPipe } from '@angular/common';
-import { FieldsetInput, FieldsetTypes } from '../../../xpr/simple-form/src/lib/simple-form';
+import { FieldsetTypes } from '../../../xpr/simple-form/src/lib/simple-form';
 import { XprFieldsets } from '../../../xpr/simple-form/src/lib/fieldsets';
 
 @Component({
-  selector: 'app-root',
+  selector: 'demo-root',
   standalone: true,
-  imports: [XprFieldset, XprFieldsets, JsonPipe],
+  imports: [XprFieldsets, JsonPipe],
   template: `
+    <h1>DEMO</h1>
     <main>
-<!--      <xpr-fieldset [desc]="desc[1]" (changed)="value=$event"></xpr-fieldset>-->
-      <xpr-fieldsets [descriptors]="desc" (changed)="value=$event" />
+      <xpr-fieldsets [descriptors]="descriptors" (changed)="value=$event"></xpr-fieldsets>
     </main>
     <pre>{{ value | json }}</pre>
   `,
 })
-export class AppComponent {
-  value: any = {
-    color: '#00FF00'
-  };
+export class Demo {
+  value: any = {};
 
-  desc: FieldsetInput[] = [
-    {
+  descriptors = {
+    bob: {
       legend: 'Another',
-      group: 'another',
-      sections: [
+      items: [
         {
           items: [
             {
@@ -37,15 +33,11 @@ export class AppComponent {
         }
       ]
     },
-    {
+    alice: {
       legend: 'Click me to expand',
-      group: 'name',
-      defaultValue: {
-        color: '#00FF00'
-      },
-      sections: [
+      items: [
         {
-          label: 'Sub section A',
+          legend: 'Sub section A',
           items: [
             {
               type: FieldsetTypes.Color,
@@ -55,7 +47,7 @@ export class AppComponent {
           ]
         },
         {
-          label: 'Sub section B',
+          legend: 'Sub section B',
           items: [
             {
               type: FieldsetTypes.Checkbox,
@@ -66,8 +58,9 @@ export class AppComponent {
               type: FieldsetTypes.Range,
               label: 'Range',
               control: 'range',
-              min: 0,
-              max: 100,
+              value: -20,
+              min: -20,
+              max: 50,
               step: 10
             },
             {
@@ -99,5 +92,5 @@ export class AppComponent {
         },
       ]
     }
-  ];
+  };
 }

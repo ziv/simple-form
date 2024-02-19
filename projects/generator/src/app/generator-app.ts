@@ -1,7 +1,15 @@
 import { Component } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { JsonPipe } from '@angular/common';
-import { type FieldsetInput, FieldsetSection, FieldsetTypes } from '../../../xpr/simple-form/src/lib/simple-form';
+import { FieldsetTypes } from '../../../xpr/simple-form/src/lib/simple-form';
+import { SimpleFormSelector } from './simple-form-selector';
+import { toCode } from './to-code';
+
+export interface ControlDescriptor {
+  type: string;
+  label: string;
+  control: string;
+}
 
 const ItemMap: Record<string, any> = {
   [FieldsetTypes.Number]: {
@@ -24,152 +32,163 @@ const ItemMap: Record<string, any> = {
   imports: [
     ReactiveFormsModule,
     JsonPipe,
+    SimpleFormSelector,
   ],
   styles: [
     `
-      .wrap {
-        display: flex;
+      section {
+        padding: 0 1em;
+        line-height: 2em;
 
-        > main, > aside {
-          flex: 1
+        select {
         }
       }
 
-      main, section {
-        display: flex;
-        flex-direction: column;
-        gap: .7em;
-      }
-
-      section {
-        //border: 1px solid #dadada;
-        //border-radius: .2em;
-      }
-
-      label, .label {
+      label {
         display: flex;
         gap: 1em;
         justify-content: space-between;
         align-items: center;
+        //border: 1px solid red;
 
-        var {
-          font-size: 1.5em;
-          cursor: pointer;
-        }
+        > span {
+          flex: 2;
 
-        span {
-          width: 8em;
-          height: 1.5em;
-
-          + div, + input {
-            display: flex;
-            flex-direction: column;
-            gap: .5em;
-            flex: 1;
+          + span, + input {
+            flex: 8;
           }
         }
       }
+      //.wrap {
+      //  display: flex;
+      //
+      //  > main, > aside {
+      //    flex: 1
+      //  }
+      //}
+      //
+      //main, section {
+      //  display: flex;
+      //  flex-direction: column;
+      //  gap: .7em;
+      //}
+      //
+      //section {
+      //  //border: 1px solid #dadada;
+      //  //border-radius: .2em;
+      //}
+      //
+      //label, .label {
+      //  display: flex;
+      //  gap: 1em;
+      //  justify-content: space-between;
+      //  align-items: center;
+      //
+      //  var {
+      //    font-size: 1.5em;
+      //    cursor: pointer;
+      //  }
+      //
+      //  span {
+      //    width: 8em;
+      //    height: 1.5em;
+      //
+      //    + div, + input {
+      //      display: flex;
+      //      flex-direction: column;
+      //      gap: .5em;
+      //      flex: 1;
+      //    }
+      //  }
+      //}
     `
   ],
   template: `
     <h1>SIMPLE FORM GENERATOR</h1>
-    <div class="wrap">
-      <main>
-        @for (group of itr(groups); track group.value.group; let iG = $index) {
-          <section [formGroup]="group" class="group">
+    <main>
+      <form [formGroup]="form">
+        <fieldset>
+          <legend>
             <label>
               <span>legend</span>
               <input type="text" formControlName="legend">
-              <button (click)="removeAt(this.groups, iG)">⌫</button>
             </label>
-            <label>
-              <span>group</span>
-              <input type="text" formControlName="group">
-            </label>
-            <div class="label">
-              <span>sections</span>
-              <div>
-                @for (section of itr(group, 'sections'); track section; let iS = $index) {
-                  <section [formGroup]="section" class="section">
-                    <label>
-                      <span>label</span>
-                      <input type="text" formControlName="label"> (optional)
-                      <button (click)="removeAt(toArr(group, 'sections'), iS)">⌫</button>
-                    </label>
-                    <div class="label">
-                      <span>items</span>
-                      <div>
-                        @for (item of itr(section, 'items'); track item; let iI = $index) {
-                          <section class="item" [formGroup]="item">
-                            <label>
-                              <span>type</span>
-                              <span>{{ item.value.type }}</span>
-                              <button (click)="removeAt(toArr(section, 'items'), iI)">⌫</button>
-                            </label>
-                            <label>
-                              <span>label</span>
-                              <input type="text" formControlName="label">
-                            </label>
-                            <label>
-                              <span>control</span>
-                              <input type="text" formControlName="control">
-                            </label>
-                            @if (item.value.type === 'range' || item.value.type === 'number') {
-                              <label>
-                                <span>min</span>
-                                <input type="number" formControlName="min">
-                              </label>
-                              <label>
-                                <span>max</span>
-                                <input type="number" formControlName="max">
-                              </label>
-                            }
-                            @if (item.value.type === 'range') {
-                              <label>
-                                <span>step</span>
-                                <input type="number" formControlName="step">
-                              </label>
-                            }
-                          </section>
-                        }
-                      </div>
-                    </div>
-                    <div class="label">
-                      <span></span>
-                      <div>
-                        <select #type>
-                          @for (t of types; track t) {
-                            <option [value]="t">{{ t }}</option>
-                          }
-                        </select>
-                        <button (click)="addItem(section, type.value)">ADD ITEM</button>
-                      </div>
-                    </div>
-                  </section>
-                }
-                <button (click)="addSection(group)">ADD SECTION</button>
-              </div>
-            </div>
+          </legend>
+          @for (section of itr(form); track $index) {
+            <fieldset [formGroup]="section">
+              <legend>
+                <label>
+                  <span>legend</span>
+                  <input type="text" formControlName="legend"> (optional)
+                </label>
+              </legend>
+              @for (item of itr(section); track $index) {
+                <fieldset [formGroup]="item">
+                  <legend>{{ item.value.type }}</legend>
+                  <label>
+                    <span>label</span>
+                    <input type="text" formControlName="label">
+                  </label>
+                  <label>
+                    <span>control</span>
+                    <input type="text" formControlName="control">
+                  </label>
+                </fieldset>
+              }
+              <section>
+                <select #type>
+                  @for (t of types; track t) {
+                    <option [value]="t">{{ t }}</option>
+                  }
+                </select>
+                <button (click)="addItem(section, type.value)">ADD ITEM</button>
+              </section>
+            </fieldset>
+          }
+          <section>
+            <button (click)="addSection(form)">ADD SECTION</button>
           </section>
-        }
-        <button (click)="addGroup()">ADD GROUP</button>
-      </main>
-      <aside>
-        <pre>{{ groups.value | json }}</pre>
-      </aside>
+        </fieldset>
+      </form>
+    </main>
+    <div>
+      <p>export default {{code}}</p>
     </div>
   `,
 })
 export class GeneratorApp {
   fb = new FormBuilder();
+  form = this.fb.group({
+    legend: [''],
+    items: this.fb.array([])
+  });
+
+  get code() {
+    return toCode(this.form.value);
+  }
+
+  addItem(group: FormGroup, type: string) {
+    (group.get('items') as FormArray).push(this.fb.group({
+      type: [type],
+      label: ['', Validators.required],
+      control: ['', Validators.required],
+    }));
+  }
+
+  addSection(group: FormGroup) {
+    (group.get('items') as FormArray).push(this.fb.group({
+      legend: [''],
+      items: this.fb.array([])
+    }));
+  }
+
+
+
+
   // @ts-ignore
   groups: FormArray<FormGroup> = this.fb.array([]);
   types = Object.values(FieldsetTypes);
 
-  // remove(form: FormGroup | FormArray, idx: number, key?: string) {
-  //   console.log('key=', key, ((key ? form.get(key) : form) as FormArray));
-  //   ((key ? form.get(key) : form) as FormArray).removeAt(idx);
-  // }
 
   toArr(form: FormGroup, key: string) {
     return form.get(key) as FormArray;
@@ -187,26 +206,21 @@ export class GeneratorApp {
     }));
   }
 
-  addSection(group: FormGroup) {
-    (group.get('sections') as FormArray).push(this.fb.group({
-      label: [''],
-      items: this.fb.array([])
-    }));
-  }
 
-  addItem(group: FormGroup, type: string) {
-    (group.get('items') as FormArray).push(this.fb.group({
-      type: [type],
-      label: ['', Validators.required],
-      control: ['', Validators.required],
-      ...(ItemMap[type as FieldsetTypes] ?? {})
-    }));
-  }
 
-  * itr(form: FormGroup | FormArray, key?: string): Generator<FormGroup> {
-    const f = key ? form.get(key) as FormArray : form as FormArray;
-    for (let i = 0; i < f.length; ++i) {
-      yield f.controls[i] as FormGroup;
+  // addItem(group: FormGroup, type: string) {
+  //   (group.get('items') as FormArray).push(this.fb.group({
+  //     type: [type],
+  //     label: ['', Validators.required],
+  //     control: ['', Validators.required],
+  //     ...(ItemMap[type as FieldsetTypes] ?? {})
+  //   }));
+  // }
+
+  * itr(form: FormGroup): Generator<FormGroup> {
+    const {controls, length} = form.get('items') as FormArray;
+    for (let i = 0; i < length; ++i) {
+      yield controls[i] as FormGroup;
     }
   }
 }
