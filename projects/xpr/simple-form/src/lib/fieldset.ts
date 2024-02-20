@@ -51,7 +51,7 @@ import {
                       </select>
                     }
                     @default {
-                      <input [type]="item.control"
+                      <input [type]="item.type"
                              [formControlName]="item.control">
                     }
                   }
