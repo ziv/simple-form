@@ -43,6 +43,11 @@ export class Demo {
               type: FieldsetTypes.Color,
               label: 'color',
               control: 'color'
+            },
+            {
+              type: FieldsetTypes.Checkbox,
+              label: 'check or uncheck',
+              control: 'foo'
             }
           ]
         },

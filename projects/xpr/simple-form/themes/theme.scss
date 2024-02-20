@@ -55,6 +55,10 @@ xpr-fieldset {
         input:is([type="checkbox"], [type="color"]) {
           flex: 1;
         }
+
+        input:is([type="checkbox"]) {
+          margin-right: .42em;
+        }
       }
     }
 
