@@ -2,14 +2,8 @@ import { Component } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { JsonPipe } from '@angular/common';
 import { FieldsetTypes } from '../../../xpr/simple-form/src/lib/simple-form';
-import { SimpleFormSelector } from './simple-form-selector';
 import { toCode } from './to-code';
-
-export interface ControlDescriptor {
-  type: string;
-  label: string;
-  control: string;
-}
+import { LegendDirective } from './legend';
 
 const ItemMap: Record<string, any> = {
   [FieldsetTypes.Number]: {
@@ -31,25 +25,72 @@ const ItemMap: Record<string, any> = {
   standalone: true,
   imports: [
     ReactiveFormsModule,
+    LegendDirective,
     JsonPipe,
-    SimpleFormSelector,
   ],
   styles: [
     `
-      section {
-        padding: 0 1em;
-        line-height: 2em;
+      main {
+        margin: 1em;
 
-        select {
+        form {
+          white-space: pre;
+          font-family: monospace;
+        }
+
+        fieldset {
+          border: 0;
+          border-left: 1px solid red;
+          border-radius: .5em;
+          margin: 0;
+          padding-top: .5em;
+
+          legend {
+            margin: 0 -.5em;
+          }
+
+          fieldset {
+            border-left: 1px solid blueviolet;
+
+            legend {
+              color: blueviolet;
+            }
+
+            fieldset {
+              border-left: 1px solid green;
+              margin-bottom: 1em;
+
+              legend {
+                color: green;
+              }
+            }
+          }
+
+          section {
+            margin-top: 1em;
+          }
+
+          input {
+            border: 0;
+            border-bottom: 1px solid grey;
+            text-align: center;
+          }
         }
       }
+
+      //section {
+      //  margin: 0 0 0 1em;
+      //  line-height: 2em;
+      //
+      //  select {
+      //  }
+      //}
 
       label {
         display: flex;
         gap: 1em;
         justify-content: space-between;
         align-items: center;
-        //border: 1px solid red;
 
         > span {
           flex: 2;
@@ -59,112 +100,108 @@ const ItemMap: Record<string, any> = {
           }
         }
       }
-      //.wrap {
-      //  display: flex;
-      //
-      //  > main, > aside {
-      //    flex: 1
-      //  }
-      //}
-      //
-      //main, section {
-      //  display: flex;
-      //  flex-direction: column;
-      //  gap: .7em;
-      //}
-      //
-      //section {
-      //  //border: 1px solid #dadada;
-      //  //border-radius: .2em;
-      //}
-      //
-      //label, .label {
-      //  display: flex;
-      //  gap: 1em;
-      //  justify-content: space-between;
-      //  align-items: center;
-      //
-      //  var {
-      //    font-size: 1.5em;
-      //    cursor: pointer;
-      //  }
-      //
-      //  span {
-      //    width: 8em;
-      //    height: 1.5em;
-      //
-      //    + div, + input {
-      //      display: flex;
-      //      flex-direction: column;
-      //      gap: .5em;
-      //      flex: 1;
-      //    }
-      //  }
-      //}
     `
   ],
   template: `
-    <h1>SIMPLE FORM GENERATOR</h1>
     <main>
+      <h1>SIMPLE FORM GENERATOR</h1>
       <form [formGroup]="form">
-        <fieldset>
-          <legend>
-            <label>
-              <span>legend</span>
-              <input type="text" formControlName="legend">
-            </label>
-          </legend>
-          @for (section of itr(form); track $index) {
-            <fieldset [formGroup]="section">
-              <legend>
-                <label>
-                  <span>legend</span>
-                  <input type="text" formControlName="legend"> (optional)
-                </label>
-              </legend>
-              @for (item of itr(section); track $index) {
-                <fieldset [formGroup]="item">
-                  <legend>{{ item.value.type }}</legend>
+        @for (group of groups; track $index) {
+          <fieldset [formGroup]="group[1]">
+            <legend>
+              <label>
+                Group [ {{ group[0] }} ],
+                <span>legend</span>
+                [<input type="text" formControlName="legend">]
+              </label>
+            </legend>
+            @for (section of itr(group[1]); track $index) {
+              <fieldset [formGroup]="section">
+                <legend>
                   <label>
-                    <span>label</span>
-                    <input type="text" formControlName="label">
+                    <span>legend</span>
+                    <input type="text" formControlName="legend"> (optional)
                   </label>
-                  <label>
-                    <span>control</span>
-                    <input type="text" formControlName="control">
-                  </label>
-                </fieldset>
-              }
-              <section>
-                <select #type>
-                  @for (t of types; track t) {
-                    <option [value]="t">{{ t }}</option>
-                  }
-                </select>
-                <button (click)="addItem(section, type.value)">ADD ITEM</button>
-              </section>
-            </fieldset>
-          }
-          <section>
-            <button (click)="addSection(form)">ADD SECTION</button>
-          </section>
-        </fieldset>
+                </legend>
+                @for (item of itr(section); track $index) {
+                  <fieldset [formGroup]="item">
+                    <legend>{{ item.value.type }}</legend>
+                    <label>
+                      <span>label</span>
+                      <input type="text" formControlName="label">
+                    </label>
+                    <label>
+                      <span>control</span>
+                      <input type="text" formControlName="control">
+                    </label>
+                    <label>
+                      <span>default value</span>
+                      <input type="text" formControlName="value"> (optional)
+                    </label>
+                    @if (item.value.type == 'range' || item.value.type == 'number') {
+                      <label>
+                        <span>min</span>
+                        <input type="number" formControlName="min">
+                      </label>
+                      <label>
+                        <span>max</span>
+                        <input type="number" formControlName="max">
+                      </label>
+                    }
+                    @if (item.value.type == 'range') {
+                      <label>
+                        <span>step</span>
+                        <input type="number" formControlName="step">
+                      </label>
+
+                    }
+                  </fieldset>
+                }
+                <section>
+                  <select #type>
+                    @for (t of types; track t) {
+                      <option [value]="t">{{ t }}</option>
+                    }
+                  </select>
+                  <button (click)="addItem(section, type.value)">ADD ITEM</button>
+                </section>
+              </fieldset>
+            }
+            <section>
+              <button (click)="addSection(group[1])">ADD SECTION</button>
+            </section>
+          </fieldset>
+        }
       </form>
+      <p>
+        <input type="text" placeholder="Group name" #gn>
+        <button (click)="addGroup(gn.value)">ADD GROUP</button>
+      </p>
+      <div>
+        <textarea>export default {{ code }}</textarea>
+      </div>
     </main>
-    <div>
-      <p>export default {{code}}</p>
-    </div>
   `,
 })
 export class GeneratorApp {
   fb = new FormBuilder();
-  form = this.fb.group({
-    legend: [''],
-    items: this.fb.array([])
-  });
+  form = this.fb.group({});
+
+  get groups(): [string, FormGroup][] {
+    return Object.entries(this.form.controls);
+  }
 
   get code() {
     return toCode(this.form.value);
+  }
+
+  addGroup(name: string) {
+    if (!name) return console.error('addGroup(): missing name');
+    if (name in this.form.value) return console.error('addGroup(): name exists');
+    this.form.addControl(name, this.fb.group({
+      legend: [''],
+      items: this.fb.array([])
+    }));
   }
 
   addItem(group: FormGroup, type: string) {
@@ -172,6 +209,8 @@ export class GeneratorApp {
       type: [type],
       label: ['', Validators.required],
       control: ['', Validators.required],
+      value: [''],
+      ...ItemMap[type] ?? {}
     }));
   }
 
@@ -183,10 +222,8 @@ export class GeneratorApp {
   }
 
 
-
-
   // @ts-ignore
-  groups: FormArray<FormGroup> = this.fb.array([]);
+  // groups: FormArray<FormGroup> = this.fb.array([]);
   types = Object.values(FieldsetTypes);
 
 
@@ -197,25 +234,6 @@ export class GeneratorApp {
   removeAt(form: FormArray, idx: number) {
     form.removeAt(idx);
   }
-
-  addGroup() {
-    this.groups.push(this.fb.group({
-      legend: [''],
-      group: [''],
-      sections: this.fb.array([]),
-    }));
-  }
-
-
-
-  // addItem(group: FormGroup, type: string) {
-  //   (group.get('items') as FormArray).push(this.fb.group({
-  //     type: [type],
-  //     label: ['', Validators.required],
-  //     control: ['', Validators.required],
-  //     ...(ItemMap[type as FieldsetTypes] ?? {})
-  //   }));
-  // }
 
   * itr(form: FormGroup): Generator<FormGroup> {
     const {controls, length} = form.get('items') as FormArray;
