@@ -8,7 +8,7 @@ import {
   type FieldsetItemU,
   type FieldsetSection,
   FieldsetTypes
-} from './simple-form.js';
+} from './simple-form';
 
 @Component({
   selector: 'xpr-fieldset',

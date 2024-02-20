@@ -9,8 +9,8 @@ import {
   ViewChildren
 } from '@angular/core';
 import { merge, Subscription } from 'rxjs';
-import { XprFieldset } from './fieldset.js';
-import type { FieldsetInput } from './simple-form.js';
+import { XprFieldset } from './fieldset';
+import type { FieldsetInput } from './simple-form';
 
 @Component({
   selector: 'xpr-fieldsets',
