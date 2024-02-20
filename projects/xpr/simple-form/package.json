@@ -1,6 +1,6 @@
 {
   "name": "@xpr/simple-form",
-  "version": "0.0.4",
+  "version": "0.0.6",
   "peerDependencies": {
     "@angular/common": "^17.1.0",
     "@angular/core": "^17.1.0",
