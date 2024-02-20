@@ -1,8 +1,14 @@
 import { AfterViewInit, Component, EventEmitter, Input, OnDestroy, Output } from '@angular/core';
-import { FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { type FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { NgClass } from '@angular/common';
 import { Subscription } from 'rxjs';
-import { fieldset, FieldsetInput, FieldsetItemU, FieldsetSection, FieldsetTypes } from './simple-form';
+import {
+  fieldset,
+  type FieldsetInput,
+  type FieldsetItemU,
+  type FieldsetSection,
+  FieldsetTypes
+} from './simple-form.js';
 
 @Component({
   selector: 'xpr-fieldset',

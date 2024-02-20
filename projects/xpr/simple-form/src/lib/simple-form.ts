@@ -130,7 +130,7 @@ export function fieldset(i: FieldsetInput) {
   const group: Record<string, unknown> = {};
   for (const sub of i.items) {
     for (const {control, type, value} of sub.items) {
-      group[control] = [value ?? FieldsMap[type]];
+      group[control] = [undefined !== value ? value : FieldsMap[type]];
     }
   }
   return new FormBuilder().group(group);
