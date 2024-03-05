@@ -5,6 +5,9 @@
     "paths": {
       "@xpr/simple-form": [
         "./dist/xpr/simple-form"
+      ],
+      "@xpr/form-inputs": [
+        "./dist/xpr/form-inputs"
       ]
     },
     "outDir": "./dist/out-tsc",

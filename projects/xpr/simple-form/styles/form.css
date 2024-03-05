@@ -1,0 +1,181 @@
+/* todo outline, disabled, focused etc. for all */
+
+/* xpr document */
+.xprd {
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+
+  .xprc, /* xpr component */
+  input[type="text"],
+  input[type="number"],
+  input[type="date"],
+  textarea,
+  select {
+    font-family: var(--xpr-form-font);
+    color: var(--xpr-primary-color);
+    accent-color: var(--xpr-accent-color);
+    background-color: var(--xpr-bg-color);
+    border: var(--xpr-form-element-border);
+    border-radius: var(--xpr-form-element-border-radius);
+    white-space: var(--xpr-form-element-white-space);
+    padding: var(--xpr-form-element-padding);
+    height: var(--xpr-form-element-height);
+
+    &:focus {
+      outline: var(--xpr-form-element-outline);
+    }
+  }
+
+  input[type="text"] {
+    &::-webkit-input-placeholder {
+      color: var(--xpr-shaded-text);
+    }
+  }
+
+  input[type="date"] {
+    &::-webkit-calendar-picker-indicator {
+      background-image: var(--xpr-form-date-image);
+    }
+  }
+
+  input[type="checkbox"] {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    display: inline-grid;
+    place-content: center;
+    margin: 0;
+    font: inherit;
+    color: currentColor;
+    cursor: pointer;
+    width: var(--xpr-form-checkbox-size);
+    height: var(--xpr-form-checkbox-size);
+    border: var(--xpr-form-element-border);
+    border-radius: var(--xpr-form-element-border-radius);
+
+    &::before {
+      content: "";
+      transform: scale(0);
+      width: var(--xpr-form-checkbox-inner-size);
+      height: var(--xpr-form-checkbox-inner-size);
+      transition: var(--xpr-form-checkbox-transition);
+      background-color: var(--xpr-accent-color);
+      border-radius: var(--xpr-form-element-border-radius);
+      /* if we want to draw something, use shadow instead of bg */
+      /*box-shadow: inset 1px 1px #FF00FF;*/
+      /*clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%);*/
+    }
+
+    &:checked::before {
+      transform: scale(1);
+    }
+  }
+
+  input[type="color"] {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background-color: transparent;
+    border: 0;
+    padding: 0;
+    cursor: pointer;
+    border: var(--xpr-form-element-border);
+    border-radius: var(--xpr-form-element-border-radius);
+    width: var(--xpr-form-color-width);
+    max-width: var(--xpr-form-color-width);
+    height: var(--xpr-form-color-height);
+
+    &::-webkit-color-swatch-wrapper {
+      padding: 0;
+    }
+
+    &::-webkit-color-swatch {
+      border: none;
+      border-radius: var(--xpr-form-element-border-radius);
+    }
+
+    &::-moz-color-swatch {
+      border: none;
+      border-radius: var(--xpr-form-element-border-radius);
+    }
+  }
+
+
+  input[type="range"] {
+    appearance: none;
+    background: transparent;
+    cursor: pointer;
+    transform: translateY(-0.25em);
+
+    &:focus {
+      outline: none;
+    }
+
+    &::-webkit-slider-runnable-track {
+      width: 100%;
+      height: 1px;
+      cursor: pointer;
+      animate: 0.2s;
+      /*box-shadow: 0 0 0 #000000;*/
+      border-radius: 0;
+      background: var(--xpr-border-color);
+      border: 0 solid var(--xpr-border-color);
+    }
+
+    &::-webkit-slider-thumb {
+      cursor: pointer;
+      -webkit-appearance: none;
+      box-shadow: 1px 1px 3px var(--xpr-border-color);
+      border: 1px solid var(--xpr-border-color);
+      height: var(--xpr-form-range-size);
+      width: var(--xpr-form-range-size);
+      /* todo this is circle, how to provide other shapes */
+      margin-top: calc(-1 * var(--xpr-form-range-size) / 2);
+      border-radius: calc(var(--xpr-form-range-size) / 2);
+      background: var(--xpr-accent-color);
+    }
+  }
+
+  input[type="radio"] {
+    appearance: none;
+    background-color: #fff;
+    margin: 0;
+    font: inherit;
+    color: currentColor;
+    display: inline-grid;
+    place-content: center;
+    cursor: pointer;
+    border: var(--xpr-form-element-border);
+    border-radius: var(--xpr-form-radio-border-radius);
+    width: var(--xpr-form-radio-size);
+    height: var(--xpr-form-radio-size);
+    /*//border-radius: 50%;*/
+
+    &::before {
+      content: "";
+      transform: scale(0);
+      transition: 120ms transform ease-in-out;
+      /*box-shadow: inset 1em 1em var(--xpr-accent-color);*/
+      background-color: var(--xpr-accent-color);;
+      width: var(--xpr-form-radio-inner-size);
+      height: var(--xpr-form-radio-inner-size);
+      border-radius: var(--xpr-form-radio-border-radius);
+    }
+
+    &:checked::before {
+      transform: scale(1);
+    }
+
+    &:focus {
+      /*//outline: max(2px, 0.15em) solid currentColor;*/
+      /*  outline: max(2px, 0.15em) solid #FF00FF;;*/
+      /*  outline-offset: max(2px, 0.15em);*/
+    }
+  }
+}
+
+
+

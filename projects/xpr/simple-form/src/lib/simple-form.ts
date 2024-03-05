@@ -1,4 +1,5 @@
 import { FormBuilder } from '@angular/forms';
+import { Type } from '@angular/core';
 
 /*
 
@@ -26,16 +27,24 @@ export enum FieldsetTypes {
   Email = 'email',
   Date = 'date',
   Time = 'time',
+  // compound form elements
+  Border = 'border',
+  CssLength = 'css-length',
   Icons = 'icons',
   Font = 'font',
 }
 
-export interface BaseFieldsetItem {
+export interface BaseFieldsetItem<T = unknown> {
   type: string;
   label: string;
   control: string;
   condition?: (value: Record<string, unknown>) => boolean;
-  value?: unknown;
+  value?: T;
+  cmp?: Type<any>; // provide specific input
+}
+
+export interface FieldsetCssLength extends BaseFieldsetItem<number> {
+  unit: string; // todo list?!
 }
 
 export interface FieldsetRange extends BaseFieldsetItem {
@@ -109,9 +118,11 @@ export type FieldsetItem =
 
 export type FieldsetContainer<T> = { items: T[]; legend?: string; };
 export type FieldsetSection = FieldsetContainer<FieldsetItem>;
-export type FieldsetInput = FieldsetContainer<FieldsetSection>;
+// export type FieldsetInput = FieldsetContainer<FieldsetSection>;
 
-const FieldsMap: Record<string, unknown> = {
+export type FieldsetInput = {items: FieldsetItem[]; legend: string; };
+
+export const FieldsMap: Record<string, unknown> = {
   [FieldsetTypes.Checkbox]: true,
   [FieldsetTypes.Range]: 0,
   [FieldsetTypes.Number]: 0,
@@ -120,18 +131,15 @@ const FieldsMap: Record<string, unknown> = {
   [FieldsetTypes.Date]: {},
   [FieldsetTypes.Time]: {},
   [FieldsetTypes.Select]: '',
-  [FieldsetTypes.Color]: '#FF00FF',
-  // specials
-  [FieldsetTypes.Font]: {},
-  [FieldsetTypes.Icons]: [],
+  [FieldsetTypes.Color]: '#FF00FF'
 };
 
 export function fieldset(i: FieldsetInput) {
   const group: Record<string, unknown> = {};
-  for (const sub of i.items) {
-    for (const {control, type, value} of sub.items) {
-      group[control] = [undefined !== value ? value : FieldsMap[type]];
-    }
-  }
+  // for (const sub of i.items) {
+  //   for (const {control, type, value} of sub.items) {
+  //     group[control] = [undefined !== value ? value : FieldsMap[type]];
+  //   }
+  // }
   return new FormBuilder().group(group);
 }

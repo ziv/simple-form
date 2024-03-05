@@ -1,0 +1,34 @@
+:root {
+  /* color scheme */
+  --xpr-primary-color: #000000;
+  --xpr-accent-color: #FF00FF;
+  --xpr-border-color: #000000;
+  --xpr-shadow-color: #000000;
+  --xpr-bg-color: #FFFFFF;
+  --xpr-shaded-text: rgba(255, 0, 255, 0.61);
+
+  /* forms */
+  --xpr-form-font: monospace;
+  --xpr-form-element-height: 1.85em;
+  --xpr-form-element-border: 1px solid currentColor;
+  --xpr-form-element-border-radius: 0.2em;
+  --xpr-form-element-outline: 1px solid var(--xpr-accent-color);
+  --xpr-form-element-white-space: pre;
+  --xpr-form-element-padding: 0 .2em;
+  /* form.date */
+  --xpr-form-date-image: url("date.svg");
+  /* form.checkbox */
+  --xpr-form-checkbox-size: 1.25em;
+  --xpr-form-checkbox-inner-size: 0.80em;
+  --xpr-form-checkbox-transition: 120ms transform ease-in-out;
+  /* form.radio */
+  --xpr-form-radio-size: 1.25em;
+  --xpr-form-radio-inner-size: 0.80em;
+  --xpr-form-radio-border-radius: 0.5em;
+
+  /* form.color */
+  --xpr-form-color-height: 2em;
+  --xpr-form-color-width: 3em;
+  /* form.range */
+  --xpr-form-range-size: 16px;
+}

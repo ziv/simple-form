@@ -1,54 +1,28 @@
-import {
-  AfterViewInit,
-  Component,
-  EventEmitter,
-  Input,
-  OnDestroy,
-  Output,
-  type QueryList,
-  ViewChildren
-} from '@angular/core';
-import { merge, Subscription } from 'rxjs';
-import { XprFieldset } from './fieldset';
+import { Component, input, signal } from '@angular/core';
+import { FormGroup } from '@angular/forms';
 import type { FieldsetInput } from './simple-form';
+import { XprFieldset } from './fieldset';
+import { XprAutoForm } from './auto-form';
 
 @Component({
   selector: 'xpr-fieldsets',
   standalone: true,
-  imports: [XprFieldset],
+  imports: [XprFieldset, XprAutoForm],
   template: `
-        @for (desc of descriptor; track $index) {
-          <xpr-fieldset [descriptor]="desc[1]" (changed)="update(desc[0], $event)"></xpr-fieldset>
-        }
+    @for (desc of descriptors(); track desc.legend; let i = $index) {
+      <xpr-fieldset [legend]="desc.legend" [expand]="opened()===i" (expandChange)="expanded(i)">
+        <xpr-auto-form [form]="form()" [descriptor]="desc.items"/>
+      </xpr-fieldset>
+    }
+    <ng-content/>
   `
 })
-export class XprFieldsets implements AfterViewInit, OnDestroy {
-  protected sub?: Subscription;
-  protected data: { [key: string]: unknown } = {};
-  @ViewChildren(XprFieldset) protected fieldSets!: QueryList<XprFieldset>;
+export class XprFieldsets {
+  form = input.required<FormGroup>();
+  descriptors = input.required<FieldsetInput[]>();
+  opened = signal(0);
 
-  @Input() autoClose = true;
-  @Input() descriptors?: Record<string, FieldsetInput>;
-  @Output() changed = new EventEmitter();
-
-  update(group: string, data: unknown,) {
-    this.data[group] = data;
-    this.changed.emit(this.data);
-  }
-
-  ngAfterViewInit() {
-    if (!this.autoClose) return;
-    this.sub?.unsubscribe();
-    this.sub = merge(...this.fieldSets.map(f => f.opened)).subscribe(field => {
-      for (const f of this.fieldSets) if (f !== field) f.close();
-    });
-  }
-
-  ngOnDestroy() {
-    this.sub?.unsubscribe();
-  }
-
-  protected get descriptor() {
-    return this.descriptors ? Object.entries(this.descriptors) : [];
+  expanded(idx: number) {
+    this.opened.set(idx);
   }
 }

@@ -1,0 +1,16 @@
+@import "styles/variables.css";
+@import "styles/base.css";
+@import "styles/form.css";
+
+table {
+  border-collapse: collapse;
+
+  th {
+    text-align: start;
+  }
+
+  th, td {
+    padding: 1em 2em;
+    border: 1px solid lightblue;
+  }
+}

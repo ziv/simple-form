@@ -4,8 +4,8 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng build @xpr/simple-form",
-    "watch": "ng build --watch --configuration development",
+    "build": "ng build @xpr/form-inputs && ng build @xpr/simple-form",
+    "watch": "ng build @xpr/simple-form --watch --configuration development",
     "test": "ng test"
   },
   "publishConfig": {
