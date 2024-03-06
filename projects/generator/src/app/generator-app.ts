@@ -1,21 +1,21 @@
 import { Component } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { JsonPipe } from '@angular/common';
-import { FieldsetTypes } from '../../../xpr/simple-form/src/lib/simple-form';
+import { FormElementType } from '../../../xpr/simple-form/src/lib/simple-form';
 import { toCode } from './to-code';
 import { LegendDirective } from './legend';
 
 const ItemMap: Record<string, any> = {
-  [FieldsetTypes.Number]: {
+  [FormElementType.Number]: {
     min: [0],
     max: [0],
   },
-  [FieldsetTypes.Range]: {
+  [FormElementType.Range]: {
     min: [0, Validators.required],
     max: [0, Validators.required],
     step: [1],
   },
-  [FieldsetTypes.Select]: {
+  [FormElementType.Select]: {
     options: [[]],
   }
 }
@@ -224,7 +224,7 @@ export class GeneratorApp {
 
   // @ts-ignore
   // groups: FormArray<FormGroup> = this.fb.array([]);
-  types = Object.values(FieldsetTypes);
+  types = Object.values(FormElementType);
 
 
   toArr(form: FormGroup, key: string) {

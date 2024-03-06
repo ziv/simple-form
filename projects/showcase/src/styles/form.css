@@ -6,6 +6,7 @@
   input[type="text"],
   input[type="number"],
   input[type="date"],
+  input[type="number"],
   textarea,
   select {
     font-family: var(--xpr-form-font);
@@ -20,6 +21,7 @@
 
     &:focus {
       outline: var(--xpr-form-element-outline);
+      background-color: var(--xpr-accent-color); /* todo should be shade */
     }
   }
 
@@ -49,6 +51,7 @@
     height: var(--xpr-form-checkbox-size);
     border: var(--xpr-form-element-border);
     border-radius: var(--xpr-form-element-border-radius);
+    background-color: var(--xpr-bg-color);
 
     &::before {
       content: "";
@@ -73,27 +76,26 @@
     -moz-appearance: none;
     appearance: none;
     background-color: transparent;
-    border: 0;
+    /*border: 0;*/
     padding: 0;
     cursor: pointer;
     border: var(--xpr-form-element-border);
     border-radius: var(--xpr-form-element-border-radius);
     width: var(--xpr-form-color-width);
     max-width: var(--xpr-form-color-width);
-    height: var(--xpr-form-color-height);
+    height: var(--xpr-form-element-height);
 
     &::-webkit-color-swatch-wrapper {
       padding: 0;
+      margin: 0;
     }
 
     &::-webkit-color-swatch {
       border: none;
-      border-radius: var(--xpr-form-element-border-radius);
     }
 
     &::-moz-color-swatch {
       border: none;
-      border-radius: var(--xpr-form-element-border-radius);
     }
   }
 

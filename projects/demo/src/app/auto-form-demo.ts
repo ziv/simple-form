@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
-import { FieldsetTypes } from '../../../xpr/simple-form/src/lib/simple-form';
+import { FormElementType } from '../../../xpr/simple-form/src/lib/simple-form';
 import { JsonPipe } from '@angular/common';
 import { XprAutoForm } from '../../../xpr/simple-form/src/lib/auto-form';
-import { autoForm } from '../../../xpr/simple-form/src/lib/utils';
+import { toForm } from '../../../xpr/simple-form/src/lib/utils';
 
 @Component({
   standalone: true,
@@ -19,24 +19,24 @@ export class AutoFormDemo {
   data: any = undefined;
   desc = [
     {
-      type: FieldsetTypes.Checkbox,
+      type: FormElementType.Checkbox,
       label: 'Transparent Background',
       control: 'transparent',
     },
     {
-      type: FieldsetTypes.Color,
+      type: FormElementType.Color,
       label: 'Background color',
       control: 'color',
       condition: (data: { [x: string]: any; }) => !data['transparent']
     },
     {
-      type: FieldsetTypes.Range,
+      type: FormElementType.Range,
       label: 'Range?',
       control: 'range',
       value: 20
     }
   ];
-  form = autoForm(this.desc);
+  form = toForm(this.desc);
 
   constructor() {
     this.form.valueChanges.subscribe((data: any) => this.data = data);

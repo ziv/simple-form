@@ -1,13 +1,13 @@
 import { FormGroupInput } from '../common/form-group-input';
-import { CssLength } from './length';
 import { Component, inject } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
+import { CssSize } from './size';
 
 export type Corners = {
-  tl: CssLength;
-  tr: CssLength;
-  bl: CssLength;
-  br: CssLength;
+  tl: CssSize;
+  tr: CssSize;
+  bl: CssSize;
+  br: CssSize;
 };
 
 const defaultCorner = {value: 0, unit: 'px'};
@@ -25,8 +25,4 @@ export class CornersComponent extends FormGroupInput<Corners> {
     bl: [{...defaultCorner}],
     br: [{...defaultCorner}],
   });
-
-  writeValue(corners: Corners) {
-    this.form.setValue(corners);
-  }
 }

@@ -1,23 +1,6 @@
-import { FormBuilder } from '@angular/forms';
 import { Type } from '@angular/core';
 
-/*
-
-  +-- FieldsetInputNew -------------------+
-  | legend                                |
-  +---------------------------------------+
-  | +--FieldsetSectionNew[0] -----------+ |
-  | | legend                            | |
-  | +-----------------------------------+ |
-  | | item[0]                           | |
-  | | ...                               | |
-  | +-----------------------------------+ |
-  | ...                                   |
-  +---------------------------------------+
-
- */
-
-export enum FieldsetTypes {
+export enum FormElementType {
   Range = 'range',
   Number = 'number',
   Checkbox = 'checkbox',
@@ -27,119 +10,80 @@ export enum FieldsetTypes {
   Email = 'email',
   Date = 'date',
   Time = 'time',
-  // compound form elements
-  Border = 'border',
-  CssLength = 'css-length',
-  Icons = 'icons',
-  Font = 'font',
+  Custom = 'custom'
 }
 
-export interface BaseFieldsetItem<T = unknown> {
-  type: string;
+export interface FormElementItem<T = unknown> {
+  type: FormElementType;
   label: string;
   control: string;
-  condition?: (value: Record<string, unknown>) => boolean;
   value?: T;
-  cmp?: Type<any>; // provide specific input
+  condition?: (value: Record<string, unknown>) => boolean;
 }
 
-export interface FieldsetCssLength extends BaseFieldsetItem<number> {
-  unit: string; // todo list?!
-}
 
-export interface FieldsetRange extends BaseFieldsetItem {
+export interface FormElementRange extends FormElementItem {
   min: number;
   max: number;
   step?: number;
 }
 
-export interface FieldsetNumber extends BaseFieldsetItem {
+export interface FormElementNumber extends FormElementItem {
   min?: number;
   max?: number;
 }
 
-export interface FieldsetCheckbox extends BaseFieldsetItem {
+export interface FormElementCheckbox extends FormElementItem {
 }
 
-export interface FieldsetColor extends BaseFieldsetItem {
+export interface FormElementColor extends FormElementItem {
 }
 
-export interface FieldsetText extends BaseFieldsetItem {
+export interface FormElementText extends FormElementItem {
   placeholder?: string;
 }
 
-export interface FieldsetEmail extends BaseFieldsetItem {
+export interface FormElementEmail extends FormElementItem {
 }
 
-export interface FieldsetDate extends BaseFieldsetItem {
+export interface FormElementDate extends FormElementItem {
 }
 
-export interface FieldsetTime extends BaseFieldsetItem {
+export interface FormElementTime extends FormElementItem {
 }
 
-export interface FieldsetSelect extends BaseFieldsetItem {
+export interface FormElementCustom extends FormElementItem {
+  cmp: Type<any>; // provide specific input
+}
+
+export interface FormElementSelect extends FormElementItem {
   options: {
     value: string | number | boolean | object;
     label: string;
   }[];
 }
 
-export interface FieldsetIcons extends BaseFieldsetItem {
-}
+export type FormElements =
+  & FormElementSelect
+  & FormElementText
+  & FormElementColor
+  & FormElementCheckbox
+  & FormElementRange
+  & FormElementNumber
+  & FormElementEmail
+  & FormElementDate
+  & FormElementTime
+  & FormElementCustom;
 
-export interface FieldsetFont extends BaseFieldsetItem {
-}
+export type FormElement =
+  | FormElementSelect
+  | FormElementText
+  | FormElementColor
+  | FormElementCheckbox
+  | FormElementRange
+  | FormElementNumber
+  | FormElementEmail
+  | FormElementDate
+  | FormElementTime
+  | FormElementCustom;
 
-export type FieldsetItemU =
-  FieldsetFont
-  & FieldsetIcons
-  & FieldsetSelect
-  & FieldsetText
-  & FieldsetColor
-  & FieldsetCheckbox
-  & FieldsetRange
-  & FieldsetNumber
-  & FieldsetEmail
-  & FieldsetDate
-  & FieldsetTime;
-
-export type FieldsetItem =
-  FieldsetFont
-  | FieldsetIcons
-  | FieldsetSelect
-  | FieldsetText
-  | FieldsetColor
-  | FieldsetCheckbox
-  | FieldsetRange
-  | FieldsetNumber
-  | FieldsetEmail
-  | FieldsetDate
-  | FieldsetTime;
-
-export type FieldsetContainer<T> = { items: T[]; legend?: string; };
-export type FieldsetSection = FieldsetContainer<FieldsetItem>;
-// export type FieldsetInput = FieldsetContainer<FieldsetSection>;
-
-export type FieldsetInput = {items: FieldsetItem[]; legend: string; };
-
-export const FieldsMap: Record<string, unknown> = {
-  [FieldsetTypes.Checkbox]: true,
-  [FieldsetTypes.Range]: 0,
-  [FieldsetTypes.Number]: 0,
-  [FieldsetTypes.Text]: '',
-  [FieldsetTypes.Email]: '',
-  [FieldsetTypes.Date]: {},
-  [FieldsetTypes.Time]: {},
-  [FieldsetTypes.Select]: '',
-  [FieldsetTypes.Color]: '#FF00FF'
-};
-
-export function fieldset(i: FieldsetInput) {
-  const group: Record<string, unknown> = {};
-  // for (const sub of i.items) {
-  //   for (const {control, type, value} of sub.items) {
-  //     group[control] = [undefined !== value ? value : FieldsMap[type]];
-  //   }
-  // }
-  return new FormBuilder().group(group);
-}

@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
-import { FieldsetInput, FieldsetTypes } from '../../../xpr/simple-form/src/lib/simple-form';
+import { FieldsetInput, FormElementType } from '../../../xpr/simple-form/src/lib/simple-form';
 import { JsonPipe } from '@angular/common';
-import { autoForm } from '../../../xpr/simple-form/src/lib/utils';
+import { toForm } from '../../../xpr/simple-form/src/lib/utils';
 import { XprFieldset } from '../../../xpr/simple-form/src/lib/fieldset';
 import { XprFieldsets } from '../../../xpr/simple-form/src/lib/fieldsets';
 import { XprAutoForm } from '../../../xpr/simple-form/src/lib/auto-form';
@@ -29,18 +29,18 @@ export class FieldsetDemo {
     legend: 'Demo',
     items: [
       {
-        type: FieldsetTypes.Checkbox,
+        type: FormElementType.Checkbox,
         label: 'Transparent Background',
         control: 'transparent',
       },
       {
-        type: FieldsetTypes.Color,
+        type: FormElementType.Color,
         label: 'Background color',
         control: 'color',
         condition: data => !data['transparent']
       },
       {
-        type: FieldsetTypes.Range,
+        type: FormElementType.Range,
         label: 'Range?',
         control: 'range',
         value: 20
@@ -51,23 +51,23 @@ export class FieldsetDemo {
     legend: 'Demo2',
     items: [
       {
-        type: FieldsetTypes.Checkbox,
+        type: FormElementType.Checkbox,
         label: 'Transparent Background',
         control: 't',
       },
       {
-        type: FieldsetTypes.Color,
+        type: FormElementType.Color,
         label: 'Background color',
         control: 'c',
         condition: data => !data['transparent']
       },
       {
-        type: FieldsetTypes.Range,
+        type: FormElementType.Range,
         label: 'Range?',
         control: 'r',
         value: 20
       }
     ]
   };
-  form = autoForm([...this.desc.items, ...this.desc2.items]);
+  form = toForm([...this.desc.items, ...this.desc2.items]);
 }

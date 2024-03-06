@@ -1,12 +1,16 @@
 import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { RouterLink, RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'xpr-root',
   standalone: true,
-  imports: [RouterOutlet],
-  template: '<router-outlet />',
-  styles: [],
+  imports: [RouterOutlet, RouterLink],
+  template: `
+    <nav>
+      <button routerLink="/debug">DEBUG</button>
+      <button routerLink="/auto">AUTO</button>
+    </nav>
+    <router-outlet />`,
 })
 export class App {
 }

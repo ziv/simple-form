@@ -23,22 +23,58 @@ export interface CssBorders {
       multi: true
     }
   ],
+  styles: [
+    `
+      :host {
+        display: inline-flex;
+        flex-direction: column;
+        gap: 2px;
+
+        label {
+          display: flex;
+
+          span {
+            width: 4.5em;
+          }
+        }
+      }
+    `
+  ],
   template: `
     <ng-container [formGroup]="form">
-      <input type="checkbox" formControlName="locked"> Locked
-      <xpr-css-border formControlName="top"/>
-      <xpr-css-border formControlName="right"/>
-      <xpr-css-border formControlName="bottom"/>
-      <xpr-css-border formControlName="left"/>
+      <label>
+        <span>Lock</span>
+        <input type="checkbox" formControlName="locked">
+      </label>
+      <label>
+        <span>top</span>
+        <xpr-css-border formControlName="top" title="Top Border"/>
+      </label>
+      @if (!form.value.locked) {
+        <label>
+          <span>right</span>
+          <xpr-css-border formControlName="right" title="Right Border"/>
+        </label>
+        <label>
+          <span>bottom</span>
+          <xpr-css-border formControlName="bottom" title="Bottom Border"/>
+        </label>
+        <label>
+          <span>left</span>
+          <xpr-css-border formControlName="left" title="Left Border"/>
+        </label>
+
+
+      }
     </ng-container>
   `
 })
 export class Borders extends FormGroupInput<CssBorders> {
   form = inject(FormBuilder).group({
-    locked: [false],
+    locked: [true],
     top: [border()],
     right: [border()],
     bottom: [border()],
     left: [border()],
-  })
+  });
 }

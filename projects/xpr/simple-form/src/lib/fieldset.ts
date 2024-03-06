@@ -1,16 +1,14 @@
 import { Component, input, model } from '@angular/core';
-import { NgClass } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
-import { XprAutoForm } from './auto-form';
 
 @Component({
   selector: 'xpr-fieldset',
   standalone: true,
-  imports: [ReactiveFormsModule, NgClass, XprAutoForm],
+  imports: [ReactiveFormsModule],
   template: `
-    <fieldset class="xpr">
-      <legend (click)="toggle()" class="xpr">
-        <span>{{ icon() }}</span>
+    <fieldset class="xpr-fieldset">
+      <legend (click)="toggle()" class="xpr-legend">
+        <span class="xpr-icon">{{ icon() }}</span>
         {{ legend() }}
       </legend>
       @if (expand()) {

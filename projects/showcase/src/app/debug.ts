@@ -27,12 +27,10 @@ import { JsonPipe, UpperCasePipe } from '@angular/common';
             <tr>
               <th>Element</th>
               <th>Preview</th>
-              <th>Value</th>
             </tr>
             <tr>
               <td>Checkbox</td>
               <td><input type="checkbox" formControlName="checkbox"></td>
-              <td>{{ value.checkbox | json }}</td>
             </tr>
             <tr>
               <td>Radio</td>
@@ -40,27 +38,22 @@ import { JsonPipe, UpperCasePipe } from '@angular/common';
                 <input type="radio" name="radio" value="A" formControlName="radio">
                 <input type="radio" name="radio" value="B" formControlName="radio">
               </td>
-              <td>{{ value.radio | json }}</td>
             </tr>
             <tr>
               <td>Range</td>
               <td><input type="range" formControlName="range"></td>
-              <td>{{ value.range | json }}</td>
             </tr>
             <tr>
               <td>Text</td>
               <td><input type="text" formControlName="text" placeholder="Type here"></td>
-              <td>{{ value.text | json }}</td>
             </tr>
             <tr>
               <td>Color</td>
               <td><input type="color" formControlName="color"></td>
-              <td>{{ value.color | uppercase | json }}</td>
             </tr>
             <tr>
               <td>Date</td>
               <td><input type="date" formControlName="date"></td>
-              <td>{{ value.date | json }}</td>
             </tr>
             <tr>
               <td>select</td>
@@ -70,16 +63,28 @@ import { JsonPipe, UpperCasePipe } from '@angular/common';
                   <option>options 2</option>
                 </select>
               </td>
-              <td>{{ value.options | json }}</td>
             </tr>
           </table>
           <h2>XPR Form Elements</h2>
-          <h3>Size</h3>
-          <xpr-css-size formControlName="size"/>
-          <h3>Border</h3>
-          <xpr-css-border formControlName="border"/>
-          <h3>Borders</h3>
-          <xpr-css-borders formControlName="borders"/>
+          <h3>CSS</h3>
+          <table>
+            <tr>
+              <th>Element</th>
+              <th>Preview</th>
+            </tr>
+            <tr>
+              <td>Size</td>
+              <td><xpr-css-size formControlName="size"/></td>
+            </tr>
+            <tr>
+              <td>Border</td>
+              <td><xpr-css-border formControlName="border"/></td>
+            </tr>
+            <tr>
+              <td>Borders</td>
+              <td><xpr-css-borders formControlName="borders"/></td>
+            </tr>
+          </table>
         </form>
       </div>
       <div>
@@ -94,6 +99,7 @@ import { JsonPipe, UpperCasePipe } from '@angular/common';
             </tr>
           </table>
         </form>
+        <pre>{{ value | json }}</pre>
       </div>
     </main>
   `,
@@ -128,8 +134,6 @@ export class Debug {
   constructor() {
     this.root.valueChanges.subscribe(value => {
       const [[key, val]] = Object.entries(value);
-      /* @ts-ignore */
-      // this.root.style.setProperty(key, val);
       document.documentElement.style.setProperty(key, val);
       if (key === '--xpr-accent-color') {
         this.form.get('color')?.setValue(val);

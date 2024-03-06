@@ -1,6 +1,7 @@
 @import "styles/variables.css";
 @import "styles/base.css";
 @import "styles/form.css";
+@import "styles/xpr.css";
 
 table {
   border-collapse: collapse;

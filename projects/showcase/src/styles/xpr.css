@@ -1,0 +1,61 @@
+:root {
+  --xpr-fieldset-legend-height: 2em;
+  --xpr-fieldset-legend-background: #162248;
+  --xpr-fieldset-background: #637bc9;
+}
+
+xpr-auto-form {
+  label.xpr-label {
+    display: flex;
+    height: calc(var(--xpr-form-element-height) * 1.5);
+    align-items: center;
+
+    span.xpr-label {
+      flex: 5;
+      overflow: hidden;
+      white-space: nowrap;
+    }
+
+    span.xpr-input {
+      flex: 7;
+    }
+  }
+}
+
+xpr-fieldset {
+  fieldset.xpr-fieldset {
+    width: 100%;
+    border: 0;
+    padding: 0;
+    margin: 0;
+    background-color: var(--xpr-fieldset-background);
+
+    legend.xpr-legend {
+      font-size: 1em; /* todo mark to var */
+      padding-inline-start: 1em; /* todo mark to var */
+      font-family: monospace; /* todo mark to var */
+      color: white; /* todo mark to var */
+      margin: 0;
+      width: 100%;
+      cursor: pointer;
+      height: var(--xpr-fieldset-legend-height);
+      line-height: var(--xpr-fieldset-legend-height);
+      background-color: var(--xpr-fieldset-legend-background);
+    }
+
+    label.xpr-label {
+      span.xpr-label {
+        padding-inline-start: 1em;
+      }
+
+      span.xpr-input {
+        padding-inline-end: 1em;
+
+        select,
+        input:not([type="checkbox"], [type="color"]) {
+          width: 100%;
+        }
+      }
+    }
+  }
+}

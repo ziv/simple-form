@@ -4,7 +4,7 @@ import { Subscription } from 'rxjs';
 
 @Directive()
 export abstract class FormGroupInput<T extends { [key: string]: any }> implements ControlValueAccessor, OnDestroy {
-  abstract form: FormGroup;
+  protected abstract form: FormGroup;
   protected sub = new Subscription();
 
   writeValue(value: T) {

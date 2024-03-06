@@ -6,7 +6,7 @@ import { XprFieldsets } from '../../../xpr/simple-form/src/lib/fieldsets';
 import { Size } from '../../../xpr/form-inputs/src/css/size';
 import { Border } from '../../../xpr/form-inputs/src/css/border';
 import { Borders } from '../../../xpr/form-inputs/src/css/borders';
-import { FieldsetInput, FieldsetTypes } from '../../../xpr/simple-form/src/lib/simple-form';
+import { FieldsetInput, FormElementType } from '../../../xpr/simple-form/src/lib/simple-form';
 import { XprFieldset } from '../../../xpr/simple-form/src/lib/fieldset';
 import { RouterLink } from '@angular/router';
 
@@ -103,12 +103,12 @@ export class Demo {
     legend: 'Layout',
     items: [
       {
-        type: FieldsetTypes.Checkbox,
+        type: FormElementType.Checkbox,
         label: 'Transparent Background',
         control: 'transparent',
       },
       {
-        type: FieldsetTypes.Color,
+        type: FormElementType.Color,
         label: 'color',
         control: 'color',
       }
