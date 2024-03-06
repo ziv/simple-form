@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
-import { XprAutoForm } from '../../../xpr/simple-form/src/lib/auto-form';
+import { XprAutoForm } from '../../../xpr/simple-form/src/components/auto-form';
 import { FormElementType } from '../../../xpr/simple-form/src/lib/simple-form';
-import { XprFieldset } from '../../../xpr/simple-form/src/lib/fieldset';
+import { XprFieldset } from '../../../xpr/simple-form/src/components/fieldset';
 
 @Component({
   selector: 'xpr-auto',

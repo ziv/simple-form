@@ -2,9 +2,9 @@ import { Component } from '@angular/core';
 import { FieldsetInput, FormElementType } from '../../../xpr/simple-form/src/lib/simple-form';
 import { JsonPipe } from '@angular/common';
 import { toForm } from '../../../xpr/simple-form/src/lib/utils';
-import { XprFieldset } from '../../../xpr/simple-form/src/lib/fieldset';
+import { XprFieldset } from '../../../xpr/simple-form/src/components/fieldset';
 import { XprFieldsets } from '../../../xpr/simple-form/src/lib/fieldsets';
-import { XprAutoForm } from '../../../xpr/simple-form/src/lib/auto-form';
+import { XprAutoForm } from '../../../xpr/simple-form/src/components/auto-form';
 
 @Component({
   standalone: true,

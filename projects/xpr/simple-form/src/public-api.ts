@@ -1,4 +1,4 @@
-export * from './lib/auto-form';
+export * from './components/auto-form';
+export * from './components/fieldset';
 export * from './lib/simple-form';
-export * from './lib/fieldset';
-export * from './lib/fieldsets';
+export * from './lib/utils';

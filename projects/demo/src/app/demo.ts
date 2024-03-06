@@ -7,7 +7,7 @@ import { Size } from '../../../xpr/form-inputs/src/css/size';
 import { Border } from '../../../xpr/form-inputs/src/css/border';
 import { Borders } from '../../../xpr/form-inputs/src/css/borders';
 import { FieldsetInput, FormElementType } from '../../../xpr/simple-form/src/lib/simple-form';
-import { XprFieldset } from '../../../xpr/simple-form/src/lib/fieldset';
+import { XprFieldset } from '../../../xpr/simple-form/src/components/fieldset';
 import { RouterLink } from '@angular/router';
 
 @Component({

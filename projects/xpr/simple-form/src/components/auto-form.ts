@@ -1,7 +1,7 @@
 import { Component, input } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { NgClass, NgComponentOutlet } from '@angular/common';
-import { FormElement, type FormElements, FormElementType } from './simple-form';
+import { FormElement, type FormElements, FormElementType } from '../lib/simple-form';
 
 export interface XprAutoFormInput {
   form: FormGroup;

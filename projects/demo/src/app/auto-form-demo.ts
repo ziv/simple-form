@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { FormElementType } from '../../../xpr/simple-form/src/lib/simple-form';
 import { JsonPipe } from '@angular/common';
-import { XprAutoForm } from '../../../xpr/simple-form/src/lib/auto-form';
+import { XprAutoForm } from '../../../xpr/simple-form/src/components/auto-form';
 import { toForm } from '../../../xpr/simple-form/src/lib/utils';
 
 @Component({
