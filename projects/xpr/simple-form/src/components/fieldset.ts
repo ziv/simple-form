@@ -1,10 +1,8 @@
-import { Component, input, model } from '@angular/core';
-import { ReactiveFormsModule } from '@angular/forms';
+import { Component, computed, input, model } from '@angular/core';
 
 @Component({
   selector: 'xpr-fieldset',
   standalone: true,
-  imports: [ReactiveFormsModule],
   template: `
     <fieldset class="xpr-fieldset">
       <legend (click)="toggle()" class="xpr-legend">
@@ -18,13 +16,10 @@ import { ReactiveFormsModule } from '@angular/forms';
   `
 })
 export class XprFieldset {
-  expand = model<boolean>(true);
   legend = input.required<string>();
+  expand = model<boolean>(true);
   collapsable = input<boolean>(true);
-
-  protected icon() {
-    return this.expand() ? '▼' : '▶';
-  }
+  protected icon = computed(() => this.expand() ? '▼' : '▶');
 
   protected toggle() {
     if (!this.collapsable()) return;

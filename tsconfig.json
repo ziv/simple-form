@@ -6,6 +6,9 @@
       "@xpr/simple-form": [
         "./dist/xpr/simple-form"
       ],
+      "@xpr/functions": [
+        "./dist/xpr/functions"
+      ],
       "@xpr/form-inputs": [
         "./dist/xpr/form-inputs"
       ]

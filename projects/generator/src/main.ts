@@ -1,4 +1,4 @@
 import { bootstrapApplication } from '@angular/platform-browser';
-import { GeneratorApp } from './app/generator-app';
+import { FormGenerator } from './app/generator';
 
-bootstrapApplication(GeneratorApp).catch((err) => console.error(err));
+bootstrapApplication(FormGenerator).catch((err) => console.error(err));

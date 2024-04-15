@@ -1,117 +1,79 @@
-import { Component, inject } from '@angular/core';
-import { JsonPipe, UpperCasePipe } from '@angular/common';
-import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
-import { border, borders, size } from '../../../xpr/form-inputs/src/common/forms';
-import { XprFieldsets } from '../../../xpr/simple-form/src/lib/fieldsets';
-import { Size } from '../../../xpr/form-inputs/src/css/size';
-import { Border } from '../../../xpr/form-inputs/src/css/border';
-import { Borders } from '../../../xpr/form-inputs/src/css/borders';
-import { FieldsetInput, FormElementType } from '../../../xpr/simple-form/src/lib/simple-form';
-import { XprFieldset } from '../../../xpr/simple-form/src/components/fieldset';
-import { RouterLink } from '@angular/router';
+import { Component } from '@angular/core';
+import { FormElementType, toForm } from '../../../xpr/simple-form/src/to-form';
+import { XprCustomForm } from '../../../xpr/simple-form/src/components/custom-form';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { JsonPipe, NgClass, NgComponentOutlet } from '@angular/common';
 
 @Component({
   selector: 'demo-root',
   standalone: true,
-  imports: [ReactiveFormsModule, XprFieldsets, JsonPipe, Size, Border, Borders, UpperCasePipe, XprFieldset, RouterLink],
+  imports: [XprCustomForm, FormsModule, NgComponentOutlet, ReactiveFormsModule, NgClass, JsonPipe],
   template: `
-    <nav>
-      <ul>
-        <li routerLink="/auto">Simple Form</li>
-      </ul>
-    </nav>
-    <form [formGroup]="form">
-      <h1>DEMO</h1>
-      <h2>Form Elements</h2>
-      <table>
-        <tr>
-          <td>Checkbox</td>
-          <td><input type="checkbox" formControlName="checkbox"></td>
-          <td>{{ value.checkbox | json }}</td>
-        </tr>
-        <tr>
-          <td>Radio</td>
-          <td>
-            <input type="radio" name="radio" value="A" formControlName="radio">
-            <input type="radio" name="radio" value="B" formControlName="radio">
-          </td>
-          <td>{{ value.radio | json }}</td>
-        </tr>
-        <tr>
-          <td>Range</td>
-          <td><input type="range" formControlName="range"></td>
-          <td>{{ value.range | json }}</td>
-        </tr>
-        <tr>
-          <td>Text</td>
-          <td><input type="text" formControlName="text"></td>
-          <td>{{ value.text | json }}</td>
-        </tr>
-        <tr>
-          <td>Color</td>
-          <td><input type="color" formControlName="color"></td>
-          <td>{{ value.color | uppercase | json }}</td>
-        </tr>
-        <tr>
-          <td>Date</td>
-          <td><input type="date" formControlName="date"></td>
-          <td>{{ value.date | json }}</td>
-        </tr>
-        <tr>
-          <td>select</td>
-          <td>
-            <select>
-              <option>options 1</option>
-              <option>options 2</option>
-            </select>
-          </td>
-        </tr>
-      </table>
-      <h2>XPR Form Elements</h2>
-      <h3>Size</h3>
-      <xpr-css-size formControlName="size"/>
-      <h3>Border</h3>
-      <xpr-css-border formControlName="border"/>
-      <h3>Borders</h3>
-      <xpr-css-borders formControlName="borders"/>
-    </form>
+    <table border="1">
+      <xpr-custom-form [form]="form" [tpl]="tpl"/>
+    </table>
     <pre>{{ form.value | json }}</pre>
+    <ng-template let-ctx #tpl>
+      <ng-container [formGroup]="ctx.group">
+        <tr>
+          <td>
+            <label [ngClass]="'xpr-label xpr-type-'+ctx.item.type">
+              <span class="xpr-label">{{ ctx.item.label }}</span>
+            </label>
+          </td>
+          <td>
+          <span class="xpr-input">
+            @switch (ctx.item.type) {
+              @case (types.Checkbox) {
+                <!-- todo checkbox does not working when bound -->
+                <input type="checkbox"
+                       [formControlName]="ctx.item.control">
+              }
+              @case (types.Range) {
+                <input type="range"
+                       [formControlName]="ctx.item.control"
+                       [min]="ctx.item.min"
+                       [max]="ctx.item.max"
+                       [step]="ctx.item.step">
+              }
+              @case (types.Select) {
+                <select [formControlName]="ctx.item.control">
+                @for (el of ctx.item.options; track el.value) {
+                  <option [ngValue]="el.value">{{ el.label }}</option>
+                }
+              </select>
+              }
+              @default {
+                <input [type]="ctx.item.type"
+                       [formControlName]="ctx.item.control">
+              }
+            }
+          </span>
+          </td>
+        </tr>
+      </ng-container>
+    </ng-template>
   `,
 })
 export class Demo {
-  form = inject(FormBuilder).group({
-    checkbox: [true],
-    radio: ['A'],
-    range: [20],
-    text: ['text'],
-    color: ['#FF00FF'],
-    date: ['2020-12-31'],
-    size: [size()],
-    border: [border()],
-    borders: [borders()],
-  });
-
-  get value() {
-    return this.form.value;
-  }
-
-  log(msg: any) {
-    console.log(msg);
-  }
-
-  desc: FieldsetInput = {
-    legend: 'Layout',
-    items: [
-      {
-        type: FormElementType.Checkbox,
-        label: 'Transparent Background',
-        control: 'transparent',
-      },
-      {
-        type: FormElementType.Color,
-        label: 'color',
-        control: 'color',
-      }
-    ]
-  };
+  form = toForm([
+    {
+      type: FormElementType.Checkbox,
+      label: 'Transparent Background',
+      control: 'transparent',
+    },
+    {
+      type: FormElementType.Color,
+      label: 'Background color',
+      control: 'color',
+      condition: (data: { [x: string]: any; }) => !data['transparent']
+    },
+    {
+      type: FormElementType.Range,
+      label: 'Range?',
+      control: 'range',
+      value: 20
+    }
+  ]);
+  protected readonly types = FormElementType;
 }

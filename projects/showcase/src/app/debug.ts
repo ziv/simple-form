@@ -5,6 +5,7 @@ import { Border } from '../../../xpr/form-inputs/src/css/border';
 import { Borders } from '../../../xpr/form-inputs/src/css/borders';
 import { Size } from '../../../xpr/form-inputs/src/css/size';
 import { JsonPipe, UpperCasePipe } from '@angular/common';
+import { Color } from '../../../xpr/form-inputs/src/css/color';
 
 @Component({
   selector: 'xpr-debug',
@@ -14,6 +15,7 @@ import { JsonPipe, UpperCasePipe } from '@angular/common';
     Border,
     Borders,
     Size,
+    Color,
     JsonPipe,
     UpperCasePipe
   ],
@@ -84,6 +86,10 @@ import { JsonPipe, UpperCasePipe } from '@angular/common';
               <td>Borders</td>
               <td><xpr-css-borders formControlName="borders"/></td>
             </tr>
+            <tr>
+              <td>FullColor</td>
+              <td><xpr-css-color formControlName="fullColor" /></td>
+            </tr>
           </table>
         </form>
       </div>
@@ -129,6 +135,7 @@ export class Debug {
     size: [size()],
     border: [border()],
     borders: [borders()],
+    fullColor: [{color: '#00FF00', alpha: 255}]
   });
 
   constructor() {

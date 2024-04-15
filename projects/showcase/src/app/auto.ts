@@ -1,31 +1,32 @@
 import { Component } from '@angular/core';
-import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
-import { XprAutoForm } from '../../../xpr/simple-form/src/components/auto-form';
-import { FormElementType } from '../../../xpr/simple-form/src/lib/simple-form';
+import { ReactiveFormsModule } from '@angular/forms';
 import { XprFieldset } from '../../../xpr/simple-form/src/components/fieldset';
+import { XprSimpleForm } from '../../../xpr/simple-form/src/components/simple-form';
+import { FormElementType, toForm } from '../../../xpr/simple-form/src/to-form';
 
 @Component({
   selector: 'xpr-auto',
   standalone: true,
   imports: [
     ReactiveFormsModule,
-    XprAutoForm,
+    XprSimpleForm,
     XprFieldset
   ],
   template: `
     <h1>AUTO</h1>
     <main class="xprd">
       <xpr-fieldset legend="Legend">
-        <xpr-fieldset legend="Legend">
-          <xpr-auto-form [form]="{form, items}"/>
-        </xpr-fieldset>
-        <xpr-fieldset legend="Legend">
-          <xpr-auto-form [form]="{form, items}"/>
-        </xpr-fieldset>
-        <h3>Another items</h3>
-        <xpr-auto-form [form]="{form, items}"/>
-        <h3>Another items</h3>
-        <xpr-auto-form [form]="{form, items}" />
+        <xpr-simple-form [form]="form"/>
+<!--        <xpr-fieldset legend="Legend">-->
+<!--          <xpr-simple-form [form]="form"/>-->
+<!--        </xpr-fieldset>-->
+        <!--        <xpr-fieldset legend="Legend">-->
+        <!--          <xpr-auto-form [form]="{form, items}"/>-->
+        <!--        </xpr-fieldset>-->
+        <!--        <h3>Another items</h3>-->
+        <!--        <xpr-auto-form [form]="{form, items}"/>-->
+        <!--        <h3>Another items</h3>-->
+        <!--        <xpr-auto-form [form]="{form, items}" />-->
       </xpr-fieldset>
     </main>
   `,
@@ -36,13 +37,7 @@ import { XprFieldset } from '../../../xpr/simple-form/src/components/fieldset';
   `],
 })
 export class Auto {
-  form = new FormBuilder().group({
-    transparent: [true],
-    color: ['#ff00ff'],
-    range: [30],
-    render: ['svg'],
-    text: ['']
-  });
+
   items = [
     {
       type: FormElementType.Range,
@@ -76,6 +71,7 @@ export class Auto {
       condition: (data: { [x: string]: any; }) => !data['transparent']
     },
   ];
+  form = toForm(this.items);
 
   constructor() {
 

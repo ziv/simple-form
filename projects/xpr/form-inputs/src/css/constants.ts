@@ -4,5 +4,6 @@ export const DefaultUnit = {value: 0, unit: 'px'};
 export const Defaults = {
   Size: {value: 0, unit: 'px'},
   Color: '#000000',
-  BorderType: 'solid'
+  BorderType: 'solid',
+  Alpha: 0,
 }

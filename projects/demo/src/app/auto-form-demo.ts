@@ -10,7 +10,9 @@ import { toForm } from '../../../xpr/simple-form/src/lib/utils';
   imports: [XprAutoForm, JsonPipe],
   template: `
     <h1>auto form</h1>
-    <xpr-auto-form [form]="form" [descriptor]="desc" />
+    <xpr-custom-form [form]="form" [descriptor]="desc">
+      <div>test</div>
+    </xpr-custom-form>
     <h2>Output</h2>
     <pre>{{ data | json }}</pre>
   `,

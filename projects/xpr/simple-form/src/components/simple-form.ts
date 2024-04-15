@@ -1,19 +1,15 @@
-import { Component, input } from '@angular/core';
-import { FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { Component, input, ViewEncapsulation } from '@angular/core';
+import { ReactiveFormsModule } from '@angular/forms';
 import { NgClass, NgComponentOutlet } from '@angular/common';
-import { FormElement, type FormElements, FormElementType } from '../lib/simple-form';
-
-export interface XprAutoFormInput {
-  form: FormGroup;
-  items: FormElement[];
-}
+import { FormElements, FormElementType, SimpleFormGroup } from '../to-form';
 
 @Component({
-  selector: 'xpr-auto-form',
+  selector: 'xpr-simple-form',
   standalone: true,
   imports: [ReactiveFormsModule, NgClass, NgComponentOutlet],
+  encapsulation: ViewEncapsulation.None,
   template: `
-    <ng-container [formGroup]="form().form">
+    <ng-container [formGroup]="form()">
       @for (item of itr(); track item.control) {
         <label [ngClass]="'xpr-label xpr-type-'+item.type">
           <span class="xpr-label">{{ item.label }}</span>
@@ -39,7 +35,7 @@ export interface XprAutoFormInput {
               </select>
               }
               @case (types.Custom) {
-                <ng-container *ngComponentOutlet="item.cmp;inputs:{form: form().form}"/>
+                <ng-container *ngComponentOutlet="item.cmp;inputs:{form: form()}"/>
               }
               @default {
                 <input [type]="item.type"
@@ -52,15 +48,13 @@ export interface XprAutoFormInput {
     </ng-container>
   `
 })
-export class XprAutoForm {
+export class XprSimpleForm {
   protected readonly types = FormElementType;
-  form = input.required<XprAutoFormInput>();
+  form = input.required<SimpleFormGroup>();
 
   protected* itr(): Generator<FormElements> {
-    const {form, items} = this.form();
-    for (const item of items)
-      if (item.condition ? item.condition(form.value) : true)
-        yield item as FormElements;
-
+    for (const c of Object.values(this.form().controls)) {
+      yield c.desc as FormElements;
+    }
   }
 }

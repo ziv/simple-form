@@ -4,7 +4,7 @@
   --xpr-fieldset-background: #637bc9;
 }
 
-xpr-auto-form {
+xpr-simple-form {
   label.xpr-label {
     display: flex;
     height: calc(var(--xpr-form-element-height) * 1.5);
