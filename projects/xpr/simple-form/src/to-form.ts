@@ -1,5 +1,5 @@
 import { Type } from '@angular/core';
-import { AsyncValidatorFn, FormControl, FormControlState, FormGroup, ValidatorFn } from '@angular/forms';
+import { AsyncValidatorFn, FormControl, FormGroup, ValidatorFn } from '@angular/forms';
 
 // todo complete all supported elements
 export enum FormElementType {
